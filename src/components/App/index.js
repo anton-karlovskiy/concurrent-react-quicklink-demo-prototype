@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-// ray test touch <
 import React, { lazy, Suspense, useEffect, useRef } from 'react';
-// ray test touch >
-// ray test touch <
 import { Route } from 'react-router-dom';
-// import { listen } from 'quicklink';
 
 import { listenWithRmanifest } from '../../utils';
-// import { Route } from '@components/Router';
-// ray test touch >
 import Footer from '@components/Footer';
 import Hero from '@components/Hero';
 import style from './index.module.css';
@@ -32,66 +26,34 @@ const About = lazy(() => import(/* webpackChunkName: "about" */ '@pages/About'))
 const Article = lazy(() => import(/* webpackChunkName: "article" */ '@pages/Article'));
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '@pages/Blog'));
 
-// ray test touch <
-const QuicklinkWrapper = ({ children }) => {
-	const ref = useRef(null);
-	useEffect(() => {
-		console.log('ray : ***** [App QuicklinkWrapper] rendering done ref.current => ', ref.current);
-		listenWithRmanifest();
-	}, [ref]);
-
-	return (
-		<div ref={ref}>
-			{children}
-		</div>
-	);
+const withQuicklink = Component => {
+	return () => {
+		const ref = useRef(null);
+		useEffect(() => {
+			listenWithRmanifest();
+		}, [ref]);
+		
+		return (
+			<div ref={ref}>
+				<Component />
+			</div>
+		);
+	};
 };
-// ray test touch >
 
-const App = () => {
-	useEffect(() => {
-		// console.log('ray : ***** [App] rendering done');
-		// window.addEventListener('load', () => {
-		// 	console.log('ray : ***** [App] load event done');
-		// });
-	}, []);
-	return (
-		<div className={style.app}>
-			<Hero />
-			<main className={style.wrapper}>
-				<Suspense fallback={<div>Loading...</div>}>
-					{/* ray test touch < */}
-					{/* <Route path="/" exact component={Home} />
-					<Route path="/blog" exact component={Blog} />
-					<Route path="/blog/:title" component={Article} />
-					<Route path="/about" exact component={About} /> */}
-					<Route path="/" exact render={() => (
-						<QuicklinkWrapper>
-							<Home />
-						</QuicklinkWrapper>
-					)} />
-					<Route path="/blog" exact render={() => (
-						<QuicklinkWrapper>
-							<Blog />
-						</QuicklinkWrapper>
-					)} />
-					<Route path="/blog/:title" exact render={() => (
-						<QuicklinkWrapper>
-							<Article />
-						</QuicklinkWrapper>
-					)} />
-					<Route path="/about" exact render={() => (
-						<QuicklinkWrapper>
-							<About />
-						</QuicklinkWrapper>
-					)} />
-					{/* ray test touch > */}
-				</Suspense>
-			</main>
-			<Footer />
-		</div>
-	);
-};
-// ray test touch >
+const App = () => (
+	<div className={style.app}>
+		<Hero />
+		<main className={style.wrapper}>
+			<Suspense fallback={<div>Loading...</div>}>
+				<Route path="/" exact component={withQuicklink(Home)} />
+				<Route path="/blog" exact component={withQuicklink(Blog)} />
+				<Route path="/blog/:title" component={withQuicklink(Article)} />
+				<Route path="/about" exact component={withQuicklink(About)} />
+			</Suspense>
+		</main>
+		<Footer />
+	</div>
+);
 
 export default App;

@@ -22,11 +22,12 @@ import App from '@components/App';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
+ReactDOM.createRoot(
+  document.getElementById('root')
+).render(
   <BrowserRouter>
     <App />
-  </BrowserRouter>,
-  document.getElementById('root')
+  </BrowserRouter>
 );
 
 // If you want your app to work offline and load faster, you can change
