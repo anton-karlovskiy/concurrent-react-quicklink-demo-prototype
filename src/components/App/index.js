@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { lazy, Suspense, useEffect, useRef } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 
 import { listenWithRmanifest } from '../../utils';
@@ -28,15 +28,12 @@ const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '@pages/Blog'));
 
 const withQuicklink = Component => {
 	return () => {
-		const ref = useRef(null);
 		useEffect(() => {
 			listenWithRmanifest();
-		}, [ref]);
+		}, []);
 		
 		return (
-			<div ref={ref}>
-				<Component />
-			</div>
+			<Component />
 		);
 	};
 };
